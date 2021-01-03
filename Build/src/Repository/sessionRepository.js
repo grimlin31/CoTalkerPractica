@@ -96,34 +96,57 @@ var inserta = function () { return __awaiter(void 0, void 0, void 0, function ()
 }); };
 exports.inserta = inserta;
 var numberSessionOn = function (timeInterval) { return __awaiter(void 0, void 0, void 0, function () {
+    var firstDate, x;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, sessionModel_1.default.aggregate([
-                    { $match: {
+            case 0: return [4 /*yield*/, sessionModel_1.default.findOne({
+                    $and: [
+                        {
                             CompanyId: 1
+                        },
+                        {
+                            UserId: 1
                         }
-                    },
-                    {
-                        $group: {
-                            _id: {
-                                interval: {
+                    ]
+                }).then(function (result) {
+                    if (result != null) {
+                        return result.toObject();
+                    }
+                    else {
+                        return "User Not Found";
+                    }
+                }).catch(function (err) {
+                    return err;
+                })];
+            case 1:
+                firstDate = _a.sent();
+                console.log(firstDate.Fecha);
+                return [4 /*yield*/, sessionModel_1.default.aggregate([
+                        {
+                            $match: {
+                                Company: 2,
+                                UserId: 2
+                            }
+                        },
+                        {
+                            $project: {
+                                resta: {
                                     $subtract: [
-                                        { $minute: "$Date" },
-                                        { $mod: [{ $minute: "$Date" }, 3] }
+                                        "$Fecha", firstDate
                                     ]
                                 }
                             }
-                        },
-                    }
-                ]).limit(20)
-                    .then(function (result) {
-                    console.log(result);
-                }).catch(function (err) {
-                    console.log(err);
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/, true];
+                        }
+                    ]).then(function (result) {
+                        console.log(result);
+                        return result;
+                    }).catch(function (err) {
+                        console.log(err);
+                        return err;
+                    })];
+            case 2:
+                x = _a.sent();
+                return [2 /*return*/, x];
         }
     });
 }); };

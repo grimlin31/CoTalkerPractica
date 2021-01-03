@@ -1,11 +1,11 @@
 import Session from "../Model/sessionModel";
-import {Aggregate} from "mongoose";
+import ts from "typescript/lib/tsserverlibrary";
 
-export const filterByCompany = async (ComId: number) => {
+export const filterByCompany = async (param1: Array<number>) => {
 
     let arr 
     await Session.find({
-        CompanyId: ComId
+        CompanyId: param1[0]
     }).limit(100).then(list =>{
         arr = list
     })
@@ -13,11 +13,11 @@ export const filterByCompany = async (ComId: number) => {
     return arr
 }
 
-export const filterByUser = async (ComId: number, UserId: number) =>{
+export const filterByUser = async (param1: Array<number>) =>{
     let arr 
     await Session.find({
-        CompanyId: ComId,
-        UserId: UserId
+        CompanyId: param1[0],
+        UserId: param1[1]
     }).then(list => {
         arr = list
     })
@@ -42,15 +42,83 @@ export const inserta = async ()=>{
     
 }
 
-export const numberSessionOn = async (timeInterval: number) => {
-    await Session.aggregate([
-        
-    ]).limit(20)
-        .then(result =>{
-            console.log(result)
+export const numberSessionOn = async (param1: Array<number>, param2: Array<any>) => {
+    let minIntervalTime = new Date(param2[1])
+    let maxIntervalTime = new Date(param2[2])
+    
+    console.log(maxIntervalTime,minIntervalTime)
+    
+    let firstDate = await Session.findOne({
+        CompanyId: param1[0],
+        UserId: param1[1],
+        Fecha: {
+            $gte: minIntervalTime,
+            $lte: maxIntervalTime
+        }
+    }).then(result =>{
+        if(result != null) {
+            return result.toObject()
+        }
+        else{
+            return "User Not Found"
+        }
     }).catch(err => {
-        console.log(err)
+        return err
     })
     
-    return true
+    
+    let query = await Session.aggregate([
+        {
+            $match: {
+                CompanyId: param1[0],
+                UserId: param1[1],
+                Fecha: {
+                    $gte: minIntervalTime,
+                    $lte: maxIntervalTime
+                }
+            }
+        },
+        {
+            
+            $project:{
+                resta: {
+                    $sum:[
+                        {
+                            $trunc: [
+                                {
+                                    $divide:[
+                                        {
+                                            $subtract: [
+                                                "$Fecha", firstDate.Fecha
+                                            ]
+                                        }, param2[0]*60*1000
+                                    ]
+                                },0
+                            ]
+                        }, 1
+                    ]
+                }
+            }
+        },
+        {
+            $group:{
+                _id: "$resta",
+                count: {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $sort: {
+                _id: 1
+            }
+        }
+    ]).then(result => {
+        return result
+    }).catch(err => {
+        return err
+    })
+  
+    return query
+    
 }

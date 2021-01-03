@@ -7,7 +7,6 @@ import bodyParser from "body-parser";
 //Import para la base de datos MongoBD
 import mongoose from "mongoose"
 import * as sessionController from "./Controller/sessionController";
-import session from "./Model/sessionModel";
 
 
 const server: Express = express()
@@ -32,9 +31,10 @@ mongoose.connect(K.TEST_ADDRESS_BD, {
 server.get('/filterByCompany/:ComId', sessionController.getSessionCompany)
 server.get('/filterByUser/:ComId/:UserId', sessionController.getSessionUser)
 
-server.get('/sessionNumber/:timeInterval', sessionController.getSessionNumber)
+server.get('/sessionNumber/:ComId/:UserId/:timeInterval/:yMin/:mMin/:dMin/:yMax/:mMax/:dMax', 
+    sessionController.getSessionNumber)
 
 
-server.listen(K.PORT, () => {
-    console.log(`Server listening at port ${K.PORT} `)
+server.listen(K.NO_DOCKER_PORT, () => {
+    console.log(`Server listening at port ${K.NO_DOCKER_PORT} `)
 })

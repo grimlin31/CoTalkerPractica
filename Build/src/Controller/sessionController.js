@@ -49,7 +49,8 @@ exports.getSessionUser = getSessionUser;
 // Get session number on time interval.
 var getSessionNumber = function (req, res) {
     var timeInterval = req.params.timeInterval;
-    parseAndRequest(timeInterval, sessionRepository.numberSessionOn).then(function (result) {
+    parseAndRequest(timeInterval, sessionRepository.numberSessionOn)
+        .then(function (result) {
         res.status(200).json({
             result: result
         });

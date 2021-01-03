@@ -46,6 +46,6 @@ mongoose_1.default.connect(K.TEST_ADDRESS_BD, {
 server.get('/filterByCompany/:ComId', sessionController.getSessionCompany);
 server.get('/filterByUser/:ComId/:UserId', sessionController.getSessionUser);
 server.get('/sessionNumber/:timeInterval', sessionController.getSessionNumber);
-server.listen(K.PORT, function () {
-    console.log("Server listening at port " + K.PORT + " ");
+server.listen(K.NO_DOCKER_PORT, function () {
+    console.log("Server listening at port " + K.NO_DOCKER_PORT + " ");
 });

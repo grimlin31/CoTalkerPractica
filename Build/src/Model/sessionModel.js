@@ -17,7 +17,7 @@ var SessionData = new mongoose_1.Schema({
     Tiempo: {
         type: Number
     },
-    Date: {
+    Fecha: {
         type: Date
     },
     Source: {

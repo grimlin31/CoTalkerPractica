@@ -1,18 +1,18 @@
 version: '3.3'
 services:
   api:
-    container_name: CoTalkerAPI
+    container_name: CoTalker_API
     restart: always 
     build: .
     ports:
-      - 3000:3000
+      - 4000:4000
     depends_on:
       - mongo
     links:
       - mongo
 
   mongo:
-    container_name: CoTalker
+    container_name: CoTalkerBD
     image: mongo
     ports:
       - 27017:27017

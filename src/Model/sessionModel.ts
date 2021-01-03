@@ -16,7 +16,7 @@ const SessionData = new Schema({
         Tiempo: {
             type: Number
         },
-       Date: {
+       Fecha: {
             type: Date
         },
         Source: {
