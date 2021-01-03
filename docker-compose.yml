@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  api:
+    container_name: CoTalker_API
+    restart: always 
+    build: .
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongo
+    links:
+      - mongo
+
+  mongo:
+    container_name: CoTalkerBD
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo_data:/data/db
